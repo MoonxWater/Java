@@ -6,11 +6,27 @@ public class Book {
     private final String author;
     private boolean issued;
 
-    Book(int id, String title, String author, boolean issued) {
+    public Book(int id, String title, String author, boolean issued) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.issued = issued;
+    }
+
+    public int getID() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public boolean isIssued() {
+        return issued;
     }
 
     public void display() {
@@ -30,7 +46,7 @@ public class Book {
         }
     }
 
-    public void returnBook() {
+    public void retBook() {
         try {
             if (!isIssued()) throw new BookNotIssuedException();
 
@@ -38,9 +54,5 @@ public class Book {
         } catch (BookNotIssuedException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    public boolean isIssued() {
-        return issued;
     }
 }
