@@ -23,7 +23,19 @@ public class Book {
     public void issue() {
         try {
             if (isIssued()) throw new BookAlreadyIssuedException();
+
+            else issued = true;
         } catch (BookAlreadyIssuedException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void returnBook() {
+        try {
+            if (!isIssued()) throw new BookNotIssuedException();
+
+            else issued = false;
+        } catch (BookNotIssuedException e) {
             System.out.println(e.getMessage());
         }
     }
