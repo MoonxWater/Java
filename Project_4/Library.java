@@ -9,6 +9,18 @@ public class Library {
         this.name = name;
     }
     
+    public void rename(String name) {
+        if (name.equals(this.name)) {
+            System.out.println("Please provide a new name");
+            return;
+        }
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public void addBook(int id, String title, String author) throws BookAlreadyExistsException {
         if (!books.isEmpty()) {
             for (Book b : books) {

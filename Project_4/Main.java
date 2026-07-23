@@ -79,7 +79,7 @@ public class Main {
 
                 try {
                     LibraryManager.deleteLibrary(delLib_name);System.out.println("Library " + delLib_name + " deleted successfully.");
-                } catch (LibraryNotFoundException | OnlyLibraryDeletionException e) {
+                } catch (LibraryNotFoundException | LibraryDeletionException e) {
                     System.out.println(e.getMessage());
                 }
                 break;
@@ -93,7 +93,7 @@ public class Main {
                 libraryChoiceHandler();
                 break;
         }
-        
+
         System.out.println();
     }
     

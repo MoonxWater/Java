@@ -15,7 +15,14 @@ public class LibraryManager {
     }
 
     public static void changeLibrary(int id) throws LibraryNotFoundException, IndexOutOfBoundsException {
-        cur_lib = libraries.get(id);
+        Library found = libraries.get(id);
+
+        if (found.equals(cur_lib)) {
+            System.out.println("Library already selected.");
+            return;
+        } 
+
+        cur_lib = found;
     }
 
     public static Library currentLibrary() {
@@ -23,12 +30,18 @@ public class LibraryManager {
     }
 
     public static void createLibrary(String name) throws LibraryAlreadyExistsException {
-        libraries.add(new Library(name));
+        try {
+            findLibrary(name);
+            throw new LibraryAlreadyExistsException();
+        } catch (LibraryNotFoundException e) {
+            libraries.add(new Library(name));
+        }
     }
 
-    public static void deleteLibrary(String name) throws LibraryNotFoundException, OnlyLibraryDeletionException {
-        if (libraries.size() == 1) throw new OnlyLibraryDeletionException();
+    public static void deleteLibrary(String name) throws LibraryNotFoundException, LibraryDeletionException {
         Library found = findLibrary(name);
+        
+        if (libraries.size() == 1 || found.equals(cur_lib)) throw new LibraryDeletionException();
 
         libraries.remove(found);
     }
@@ -39,7 +52,6 @@ public class LibraryManager {
                 return l;
             }
         }
-
         throw new LibraryNotFoundException();
     }
 }
