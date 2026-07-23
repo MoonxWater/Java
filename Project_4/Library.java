@@ -4,65 +4,52 @@ import java.util.ArrayList;
 public class Library {
     public static ArrayList<Book> books = new ArrayList<>();
 
-    public static boolean addBook(int id, String title, String author) {
+    public static void addBook(int id, String title, String author) throws BookAlreadyExistsException {
         if (!books.isEmpty()) {
             for (Book b : books) {
-                try {
-                    if (b.getID() == id || b.getTitle() == title) {
-                    throw new BookAlreadyExistsException();
+                    if (b.getID() == id || b.getTitle().equals(title)) {
+                        throw new BookAlreadyExistsException();
                     }
-                } catch (BookAlreadyExistsException e) {
-                    System.out.println(e.getMessage());
-                    return false;
                 }
             }
-        }
 
         books.add(new Book(id, title, author, false));
         System.out.printf("Book \"%s\" added successfully.\n", title);
-        return true;
     }
 
-    public static void removeBook(int id) {
-        if (books.isEmpty()) 
-            System.out.println("No books in the library");
+    public static void removeBook(int id) throws LibraryEmptyException, BookNotFoundException {
+        if (books.isEmpty()) throw new LibraryEmptyException();
 
         for (Book b : books) {
             if (b.getID() == id) {
                 books.remove(b);
                 System.out.println("Book removed successfully");
+                return;
             }
         }
 
-        try {
-            throw new BookNotFoundException();
-        } catch (BookNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+        throw new BookNotFoundException();
     }
 
-    public static Book findBook(int id) throws NullPointerException {
+    public static Book findBook(int id) throws BookNotFoundException, LibraryEmptyException {
+        if (books.isEmpty()) throw new LibraryEmptyException();
+
         for (Book b : books) {
             if (b.getID() == id) {
                 return b;
             }
         }
 
-        try {
-            throw new BookNotFoundException();
-        } catch (BookNotFoundException e) {
-            System.out.println(e.getMessage());
-            return new Book(-1, "null", "null", false);
-        }
+        throw new BookNotFoundException();
     }
 
-    public static boolean bookExists(int id) {
-        if (findBook(id) instanceof Book) return true;
+    public static boolean bookExists(int id) throws BookNotFoundException, LibraryEmptyException {
+        if (findBook(id) != null) return true;
 
-        else return false;
+        return false;
     }
     
-    public static void issueBook(int id) {
+    public static void issueBook(int id) throws BookNotFoundException, BookAlreadyIssuedException, LibraryEmptyException {
         if (bookExists(id)) {
             findBook(id).issue();
             System.out.println("Book issued successfully");
@@ -70,25 +57,63 @@ public class Library {
         } else System.out.println("Book does not exist");
     }
 
-    public static void returnBook(int id) {
+    public static void returnBook(int id) throws BookNotFoundException, BookNotIssuedException, LibraryEmptyException {
         if (bookExists(id)) {
-            findBook(id).retBook();
-            System.out.println("Book returned successfully");
 
-        } else System.out.println("Book does not exist");
+            Book found = findBook(id);
+
+            if (found.isIssued()) {
+                found.retBook();
+                System.out.println("Book returned successfully");
+            } else {
+                throw new BookNotIssuedException();
+            }
+
+        } else throw new BookNotFoundException();
     }
 
-    public static void displayBooks() {
+    public static void displayBooks() throws LibraryEmptyException {
+        if (books.isEmpty()) throw new LibraryEmptyException();
+        
         for (Book b : books) {
             b.display();
             System.out.println();
         }
     }
 
-    public static void availableBooks() {
+    public static void availableBooks() throws LibraryEmptyException, NoBooksAvailableException {
+        if (books.isEmpty()) throw new LibraryEmptyException();
+
+        boolean found = false;
+        
         for (Book b : books) {
-            if (!b.isIssued()) b.display();
-            System.out.println();
+            if (!b.isIssued()) {
+                b.display();
+                found = true;
+                System.out.println();
+            }
+        }
+
+        if (found == false) {
+            throw new NoBooksAvailableException();
+        }
+    }
+
+    public static void issuedBooks() throws LibraryEmptyException, NoBooksIssuedException {
+        if (books.isEmpty()) throw new LibraryEmptyException();
+
+        boolean found = false;
+        
+        for (Book b : books) {
+            if (b.isIssued()) {
+                b.display();
+                found = true;
+                System.out.println();
+            }
+        }
+
+        if (found == false) {
+            throw new NoBooksIssuedException();
         }
     }
 }

@@ -16,48 +16,83 @@ public class Main {
                 System.out.print("Enter Author of Book: ");
                 String author = sc.nextLine();
 
-                Library.addBook(add_id, add_title, author);
-
-                System.out.println("Waiting...");
-                sc.nextLine();
+                try {
+                    Library.addBook(add_id, add_title, author);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 break;
 
             case 2:
-                System.out.println("====== All Books ======");
-                Library.displayBooks();
+                System.out.println("1. All Books\n2. Available Books\n3. Issued Books");
+                System.out.print("Choice: ");
+                int display_type = Integer.parseInt(sc.nextLine().trim());
 
-                System.out.println("====== Available ======");
-                Library.availableBooks();
+                try {
+                    if (display_type == 1) {
+                        System.out.println("====== All Books ======");
+                        Library.displayBooks();
+                    } else if (display_type == 2) {
+                        System.out.println("====== Available ======");
+                        Library.availableBooks();
+                    } else if (display_type == 3) {
+                        System.out.println("====== Issued ======");
+                        Library.issuedBooks();
+                    } else {
+                        System.out.println("Invalid choice!");
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+
+                System.out.println();
                 break;
 
             case 3:
                 System.out.print("Enter Book ID to issue: ");
                 int issue_id = Integer.parseInt(sc.nextLine().trim());
 
-                Library.issueBook(issue_id);
+                try {
+                    Library.issueBook(issue_id);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 break;   
 
             case 4:
                 System.out.print("Enter Book ID to return: ");
                 int return_id = Integer.parseInt(sc.nextLine().trim());
-
-                Library.returnBook(return_id);
+                
+                try {
+                    Library.returnBook(return_id);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 break; 
 
             case 5:
                 System.out.print("Enter Book ID: ");
                 int remove_id = Integer.parseInt(sc.nextLine().trim());
 
-                Library.removeBook(remove_id);
+                try {
+                    Library.removeBook(remove_id);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 break; 
 
             case 6:
                 System.out.print("Enter Book ID: ");
                 int find_id = Integer.parseInt(sc.nextLine().trim());
 
-                Book found = Library.findBook(find_id);
+                try {
+                    Book found = Library.findBook(find_id);
 
-                if (found.getID() != -1) found.display();
+                    System.out.println();
+                    if (found != null) found.display();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 break;
 
             default:
@@ -83,9 +118,17 @@ public class Main {
             System.out.print("Choice: ");
             int choice = Integer.parseInt(sc.nextLine().trim());
 
-            if (choice == 7) break;
+            if (choice == 7) {
+                System.out.println("\nThank You!");
+                break;
+            }
+
+            System.out.println();
 
             choiceHandler(choice);
+
+            System.out.println("Press Enter to continue...");
+                sc.nextLine();
         }
         
         sc.close();
