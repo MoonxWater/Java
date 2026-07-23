@@ -2,8 +2,8 @@ package Project_4;
 import java.util.Scanner;
 
 public class Main {
-    static Scanner sc = new Scanner(System.in);
-    static String cur_interface = "book";
+    private static Scanner sc = new Scanner(System.in);
+    private static String cur_interface = "book";
 
     public static int getIntInput(String prompt) {
         try {
