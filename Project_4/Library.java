@@ -22,13 +22,11 @@ public class Library {
     }
 
     public void addBook(int id, String title, String author) throws BookAlreadyExistsException {
-        if (!books.isEmpty()) {
-            for (Book b : books) {
-                    if (b.getID() == id || b.getTitle().equals(title)) {
-                        throw new BookAlreadyExistsException();
-                    }
+        for (Book b : books) {
+                if (b.getID() == id || b.getTitle().equals(title)) {
+                    throw new BookAlreadyExistsException();
                 }
-            }
+        }
 
         books.add(new Book(id, title, author, false));
         System.out.printf("Book \"%s\" added successfully.\n", title);
@@ -36,10 +34,10 @@ public class Library {
 
     public void removeBook(int id) throws LibraryEmptyException, BookNotFoundException {
         if (books.isEmpty()) throw new LibraryEmptyException();
-
-        for (Book b : books) {
-            if (b.getID() == id) {
-                books.remove(b);
+        
+        for (int i = 0; i < books.size(); i++) {
+            if (books.get(i).getID() == id) {
+                books.remove(books.get(i));
                 System.out.println("Book removed successfully");
                 return;
             }

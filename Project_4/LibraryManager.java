@@ -14,7 +14,7 @@ public class LibraryManager {
         }
     }
 
-    public static void changeLibrary(int id) throws LibraryNotFoundException, IndexOutOfBoundsException {
+    public static void changeLibrary(int id) throws IndexOutOfBoundsException {
         Library found = libraries.get(id);
 
         if (found.equals(cur_lib)) {
@@ -52,6 +52,7 @@ public class LibraryManager {
                 return l;
             }
         }
+        
         throw new LibraryNotFoundException();
     }
 }
