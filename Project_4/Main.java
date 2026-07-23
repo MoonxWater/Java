@@ -3,8 +3,110 @@ import java.util.Scanner;
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
+    static String cur_interface = "book";
+
+    public static void display_menu(String menu_type) {
+        if (menu_type.equals("main")) {
+            System.out.println("====== " + LibraryManager.currentLibrary().name + " ======\n" + //
+        "1. Add Book\n" + //
+        "2. Display Books\n" + //
+        "3. Issue Book\n" + //
+        "4. Return Book\n" + //
+        "5. Remove Book\n" + //
+        "6. Search Book\n" + //
+        "7. Library Ops\n" + //
+        "8. Exit");
+        } else if (menu_type.equals("library_op")) {
+            System.out.println("==== Library Operations ====\n" + //
+                "1. Switch Library\n" + //
+                "2. View Libraries\n" + //
+                "3. Create Library\n" + //
+                "4. Delete Library\n" + //
+                "5. Back");
+        } else if (menu_type.equals("books")) {
+            System.out.println("==== Book Display Options ====\n" + //
+            "1. All Books\n" + //
+            "2. Available Books\n" + //
+            "3. Issued Books\n" + //
+            "4. Back");
+        }
+    }
+
+    public static void libraryChoiceHandler() {
+        display_menu("library_op");
+
+        System.out.print("Choice: ");
+        int choice = Integer.parseInt(sc.nextLine().trim());
+
+        switch (choice) {
+            case 1:
+                System.out.print("Enter Library Number: ");
+                int library_id = Integer.parseInt(sc.nextLine().trim());
+
+                try {
+                    LibraryManager.changeLibrary(library_id - 1);
+                    System.out.println("Library changed successfully.");
+                } catch (LibraryNotFoundException e) {
+                    System.out.println(e.getMessage());
+                } catch(IndexOutOfBoundsException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+
+            case 2:
+                System.out.println("==== All Libraries ====");
+
+                LibraryManager.displayLibraries();
+                break;
+            
+            case 3:
+                System.out.print("Enter name of new Library: ");
+                String newLib_name = sc.nextLine();
+
+                try {
+                    LibraryManager.createLibrary(newLib_name);
+                    System.out.println("Library " + newLib_name + " created succesfully.");
+                } catch (LibraryAlreadyExistsException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+
+            case 4:
+                System.out.println("Delete Library");
+                LibraryManager.displayLibraries();
+                System.out.print("Enter name of Library to delete: ");
+                String delLib_name = sc.nextLine();
+
+                try {
+                    LibraryManager.deleteLibrary(delLib_name);System.out.println("Library " + delLib_name + " deleted successfully.");
+                } catch (LibraryNotFoundException | OnlyLibraryDeletionException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+
+            case 5:
+                cur_interface = "book";
+                break;
+        
+            default:
+                System.out.println("Invalid Choice!");
+                libraryChoiceHandler();
+                break;
+        }
+        
+        System.out.println();
+    }
     
-    public static void choiceHandler(int choice) {
+    public static boolean primaryChoiceHandler(Library library) {
+        display_menu("main");
+        System.out.print("Choice: ");
+        int choice = Integer.parseInt(sc.nextLine().trim());
+
+        if (choice == 8) {
+            System.out.println("\nThank You!");
+            return false;
+        }
+
         switch (choice) {
             case 1:
                 System.out.print("Enter Book ID: ");
@@ -17,35 +119,34 @@ public class Main {
                 String author = sc.nextLine();
 
                 try {
-                    Library.addBook(add_id, add_title, author);
-                } catch (Exception e) {
+                    library.addBook(add_id, add_title, author);
+                } catch (BookAlreadyExistsException e) {
                     System.out.println(e.getMessage());
                 }
                 break;
 
             case 2:
-                System.out.println("1. All Books\n2. Available Books\n3. Issued Books");
+                display_menu("books");
+
                 System.out.print("Choice: ");
                 int display_type = Integer.parseInt(sc.nextLine().trim());
 
                 try {
                     if (display_type == 1) {
                         System.out.println("====== All Books ======");
-                        Library.displayBooks();
+                        library.displayBooks();
                     } else if (display_type == 2) {
                         System.out.println("====== Available ======");
-                        Library.availableBooks();
+                        library.availableBooks();
                     } else if (display_type == 3) {
                         System.out.println("====== Issued ======");
-                        Library.issuedBooks();
+                        library.issuedBooks();
                     } else {
                         System.out.println("Invalid choice!");
                     }
-                } catch (Exception e) {
+                } catch (NoBooksAvailableException | NoBooksIssuedException | LibraryEmptyException e) {
                     System.out.println(e.getMessage());
                 }
-
-                System.out.println();
                 break;
 
             case 3:
@@ -53,8 +154,8 @@ public class Main {
                 int issue_id = Integer.parseInt(sc.nextLine().trim());
 
                 try {
-                    Library.issueBook(issue_id);
-                } catch (Exception e) {
+                    library.issueBook(issue_id);
+                } catch (BookNotFoundException | BookAlreadyIssuedException | LibraryEmptyException e) {
                     System.out.println(e.getMessage());
                 }
                 break;   
@@ -64,8 +165,8 @@ public class Main {
                 int return_id = Integer.parseInt(sc.nextLine().trim());
                 
                 try {
-                    Library.returnBook(return_id);
-                } catch (Exception e) {
+                    library.returnBook(return_id);
+                } catch (BookNotFoundException | BookNotIssuedException | LibraryEmptyException e) {
                     System.out.println(e.getMessage());
                 }
                 break; 
@@ -75,8 +176,8 @@ public class Main {
                 int remove_id = Integer.parseInt(sc.nextLine().trim());
 
                 try {
-                    Library.removeBook(remove_id);
-                } catch (Exception e) {
+                    library.removeBook(remove_id);
+                } catch (BookNotFoundException | LibraryEmptyException e) {
                     System.out.println(e.getMessage());
                 }
                 break; 
@@ -86,49 +187,56 @@ public class Main {
                 int find_id = Integer.parseInt(sc.nextLine().trim());
 
                 try {
-                    Book found = Library.findBook(find_id);
+                    Book found = library.findBook(find_id);
 
                     System.out.println();
-                    if (found != null) found.display();
-                } catch (Exception e) {
+                    found.display();
+                } catch (BookNotFoundException | LibraryEmptyException e) {
                     System.out.println(e.getMessage());
                 }
+                break;
+            
+            case 7:
+                System.out.println();
+                cur_interface = "library";
+                libraryChoiceHandler();
                 break;
 
             default:
                 System.out.println("Invalid Choice!");
+                primaryChoiceHandler(library);
                 break;
         }
+
+        System.out.print("Press Enter to continue...");
+        sc.nextLine();
+
+        System.out.println();
+
+        return true;
     }
 
     public static void main(String[] args) {
+        System.out.println("Initilising new Library 'Default'...");
         
-        String menu = "====== Library ======\n" + //
-        "\n" + //
-        "1. Add Book\n" + //
-        "2. Display Books\n" + //
-        "3. Issue Book\n" + //
-        "4. Return Book\n" + //
-        "5. Remove Book\n" + //
-        "6. Search Book\n" + //
-        "7. Exit";
+        try {
+            LibraryManager.createLibrary("Default");
+            LibraryManager.changeLibrary(0);
+        } catch (ArrayIndexOutOfBoundsException | LibraryNotFoundException | LibraryAlreadyExistsException e) {
+            System.out.println(e.getMessage());
+        }
 
-        while (true) {
-            System.out.println(menu);
-            System.out.print("Choice: ");
-            int choice = Integer.parseInt(sc.nextLine().trim());
+        System.out.println("Press Enter to continue...");
+        sc.nextLine();
 
-            if (choice == 7) {
-                System.out.println("\nThank You!");
-                break;
+        boolean flag = true;
+
+        while (flag) {
+            if (cur_interface.equals("book")) {
+                flag = primaryChoiceHandler(LibraryManager.currentLibrary());
+            } else if (cur_interface.equals("library")) {
+                libraryChoiceHandler();
             }
-
-            System.out.println();
-
-            choiceHandler(choice);
-
-            System.out.println("Press Enter to continue...");
-                sc.nextLine();
         }
         
         sc.close();

@@ -2,9 +2,14 @@ package Project_4;
 import java.util.ArrayList;
 
 public class Library {
-    public static ArrayList<Book> books = new ArrayList<>();
+    public final ArrayList<Book> books = new ArrayList<>();
+    public String name;
 
-    public static void addBook(int id, String title, String author) throws BookAlreadyExistsException {
+    public Library(String name) {
+        this.name = name;
+    }
+    
+    public void addBook(int id, String title, String author) throws BookAlreadyExistsException {
         if (!books.isEmpty()) {
             for (Book b : books) {
                     if (b.getID() == id || b.getTitle().equals(title)) {
@@ -17,7 +22,7 @@ public class Library {
         System.out.printf("Book \"%s\" added successfully.\n", title);
     }
 
-    public static void removeBook(int id) throws LibraryEmptyException, BookNotFoundException {
+    public void removeBook(int id) throws LibraryEmptyException, BookNotFoundException {
         if (books.isEmpty()) throw new LibraryEmptyException();
 
         for (Book b : books) {
@@ -31,7 +36,7 @@ public class Library {
         throw new BookNotFoundException();
     }
 
-    public static Book findBook(int id) throws BookNotFoundException, LibraryEmptyException {
+    public Book findBook(int id) throws BookNotFoundException, LibraryEmptyException {
         if (books.isEmpty()) throw new LibraryEmptyException();
 
         for (Book b : books) {
@@ -42,37 +47,22 @@ public class Library {
 
         throw new BookNotFoundException();
     }
-
-    public static boolean bookExists(int id) throws BookNotFoundException, LibraryEmptyException {
-        if (findBook(id) != null) return true;
-
-        return false;
-    }
     
-    public static void issueBook(int id) throws BookNotFoundException, BookAlreadyIssuedException, LibraryEmptyException {
-        if (bookExists(id)) {
-            findBook(id).issue();
-            System.out.println("Book issued successfully");
+    public void issueBook(int id) throws BookNotFoundException, BookAlreadyIssuedException, LibraryEmptyException {
+        Book found = findBook(id);
 
-        } else System.out.println("Book does not exist");
+        found.issue();
+        System.out.println("Book issued successfully");
     }
 
-    public static void returnBook(int id) throws BookNotFoundException, BookNotIssuedException, LibraryEmptyException {
-        if (bookExists(id)) {
+    public void returnBook(int id) throws BookNotFoundException, BookNotIssuedException, LibraryEmptyException {
+        Book found = findBook(id);
 
-            Book found = findBook(id);
-
-            if (found.isIssued()) {
-                found.retBook();
-                System.out.println("Book returned successfully");
-            } else {
-                throw new BookNotIssuedException();
-            }
-
-        } else throw new BookNotFoundException();
+        found.retBook();
+        System.out.println("Book returned successfully");
     }
 
-    public static void displayBooks() throws LibraryEmptyException {
+    public void displayBooks() throws LibraryEmptyException {
         if (books.isEmpty()) throw new LibraryEmptyException();
         
         for (Book b : books) {
@@ -81,7 +71,7 @@ public class Library {
         }
     }
 
-    public static void availableBooks() throws LibraryEmptyException, NoBooksAvailableException {
+    public void availableBooks() throws LibraryEmptyException, NoBooksAvailableException {
         if (books.isEmpty()) throw new LibraryEmptyException();
 
         boolean found = false;
@@ -94,16 +84,16 @@ public class Library {
             }
         }
 
-        if (found == false) {
+        if (!found) {
             throw new NoBooksAvailableException();
         }
     }
 
-    public static void issuedBooks() throws LibraryEmptyException, NoBooksIssuedException {
+    public void issuedBooks() throws LibraryEmptyException, NoBooksIssuedException {
         if (books.isEmpty()) throw new LibraryEmptyException();
 
         boolean found = false;
-        
+
         for (Book b : books) {
             if (b.isIssued()) {
                 b.display();
@@ -112,7 +102,7 @@ public class Library {
             }
         }
 
-        if (found == false) {
+        if (!found) {
             throw new NoBooksIssuedException();
         }
     }
