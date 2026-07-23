@@ -24,7 +24,7 @@ public class Main {
 
     public static void display_menu(String menu_type) {
         if (menu_type.equals("main")) {
-            System.out.println("====== " + LibraryManager.currentLibrary().name + " ======\n" + //
+            System.out.println("====== " + LibraryManager.currentLibrary().getName() + " ======\n" + //
             "1. Add Book\n" + //
             "2. Display Books\n" + //
             "3. Issue Book\n" + //
@@ -45,7 +45,7 @@ public class Main {
             "1. All Books\n" + //
             "2. Available Books\n" + //
             "3. Issued Books\n" + //
-            "4. Back\n");
+            "4. Back");
         }
     }
 
@@ -67,7 +67,7 @@ public class Main {
                 break;
 
             case 2:// display
-                System.out.println("==== All Libraries ====");
+                System.out.println("\n==== All Libraries ====");
 
                 LibraryManager.displayLibraries();
                 break;
@@ -139,7 +139,7 @@ public class Main {
 
                 try {
                     if (display_type == 1) {
-                        System.out.println("====== All Books ======");
+                        System.out.println("\n====== All Books ======");
                         library.displayBooks();
                     } else if (display_type == 2) {
                         System.out.println("====== Available ======");

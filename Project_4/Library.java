@@ -2,8 +2,8 @@ package Project_4;
 import java.util.ArrayList;
 
 public class Library {
-    public final ArrayList<Book> books = new ArrayList<>();
-    public String name;
+    private final ArrayList<Book> books = new ArrayList<>();
+    private String name;
 
     public Library(String name) {
         this.name = name;

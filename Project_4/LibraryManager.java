@@ -9,7 +9,7 @@ public class LibraryManager {
         int i = 0;
 
         for (Library l : libraries) {
-            System.out.println((i + 1) + ". " + l.name);
+            System.out.println((i + 1) + ". " + l.getName());
             i++;
         }
     }
@@ -48,11 +48,11 @@ public class LibraryManager {
 
     public static Library findLibrary(String name) throws LibraryNotFoundException {
         for (Library l : libraries) {
-            if (l.name.equals(name)) {
+            if (l.getName().equals(name)) {
                 return l;
             }
         }
-        
+
         throw new LibraryNotFoundException();
     }
 }
