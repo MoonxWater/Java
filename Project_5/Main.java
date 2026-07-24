@@ -23,9 +23,11 @@ public class Main {
         try {
             System.out.print(prompt);
             return Integer.parseInt(sc.nextLine().trim());
+
         } catch (NumberFormatException e) {
             System.out.println("Invalid Input!");
             return getIntInput(prompt);
+
         }
     }
 
@@ -47,27 +49,47 @@ public class Main {
                 break;
 
             case 2: 
-                System.out.println();
+                System.out.println("\n==== Search Contact ====\n1. Search by name\n2. Search by number");
+                int search_choice = getIntInput("Choice: ");
+                String search_data = getStrInput("Enter seach parameter: ");
+
+                if (search_choice == 3) 
+                    break;
+
+                if (search_choice == 1) {
+                    Contact.findContact("name", search_data);
+
+                } else if (search_choice == 2) {
+                    Contact.findContact("number", search_data);
+
+                } else {
+                    System.out.println("Invalid Choice!");
+
+                }
                 break;
 
             case 3:
-                System.out.println("\n==== Update Contact ====");
-                System.out.println("1. Update name\n2. Update number\n3. Back");
+                System.out.println("\n==== Update Contact ====\n1. Update name\n2. Update number\n3. Back");
 
                 int update_choice = getIntInput("Choice: ");
 
                 String data = getStrInput("Enter contact name/number: ");
+
+                if (update_choice == 3)
+                    break;
+
                 if (update_choice == 1) {
                     String new_name = getStrInput("Enter new name: ");
                     Contact.rename(data, new_name);
+
                 } else if (update_choice == 2) {
                     String new_number = getStrInput("Enter new number: ");
                     Contact.updateNumber(data, new_number);
-                } else if (update_choice == 3) {
-                    break;
+
                 } else {
                     System.out.println("Invalid Choice!");
                     choiceHandler();
+
                 }
                 break;
 
@@ -91,6 +113,7 @@ public class Main {
         }
         return true;
     }
+    
     public static void main(String[] args) {
         boolean flag = true;
 
@@ -101,5 +124,6 @@ public class Main {
 
             System.out.println();
         }
+        sc.close();
     }
 }

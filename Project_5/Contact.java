@@ -6,14 +6,14 @@ public class Contact {
     private static HashMap<String, String> contacts = new HashMap<>(); 
 
     public static void addContact(String name, String number) {
-        if (contacts.get(name) == null) {
+        if (contacts.containsKey(name)) {
             contacts.put(name, number);
             System.out.println("Contact added successfully");
         } else System.out.println("Contact already exists");
     }
     
     public static void deleteContact(String name) {
-        if (contacts.get(name) != null) {
+        if (contacts.containsKey(name)) {
             contacts.remove(name);
             System.out.println("Contact removed successfully");
         } else System.out.println("Contact does not exist");
@@ -29,7 +29,7 @@ public class Contact {
         }
     }
 
-    public String getName(String number) {
+    public static String getName(String number) {
         for (Map.Entry<String, String> entry : contacts.entrySet()) {
             if (entry.getValue() == number) {
                 return entry.getKey();
@@ -58,5 +58,16 @@ public class Contact {
         }
 
         contacts.put(name, new_number);
+    }
+
+    public static void findContact(String search_type, String data) {
+        String val = (search_type.equals("name")) ? getNumber(data) : getName(data);
+
+        if (val == null) {
+            System.out.println("Contact not found");
+            return;
+        }
+        
+        System.out.println(getName(val));
     }
 }
