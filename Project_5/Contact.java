@@ -3,8 +3,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Contact {
-    private HashMap<String, String> contacts = new HashMap<>(); 
+    private static HashMap<String, String> contacts = new HashMap<>(); 
+
+    public static void addContact(String name, String number) {
+        if (contacts.get(name) == null) {
+            contacts.put(name, number);
+            System.out.println("Contact added successfully");
+        } else System.out.println("Contact already exists");
+    }
     
+    public static void deleteContact(String name) {
+        if (contacts.get(name) != null) {
+            contacts.remove(name);
+            System.out.println("Contact removed successfully");
+        } else System.out.println("Contact does not exist");
+    }
+
+    public static void displayAll() {
+        if (contacts.isEmpty()) System.out.println("No Contacts");
+
+        int i = 1;
+        for (Map.Entry<String, String> entry : contacts.entrySet()) {
+            System.out.println(i + ". " + entry.getKey() + " --> " + entry.getValue());
+            i++;
+        }
+    }
+
     public String getName(String number) {
         for (Map.Entry<String, String> entry : contacts.entrySet()) {
             if (entry.getValue() == number) {
@@ -14,11 +38,11 @@ public class Contact {
         return null;
     }
 
-    public String getNumber(String name) {
+    public static String getNumber(String name) {
         return contacts.get(name);
     }
 
-    public void rename(String name, String new_name) {
+    public static void rename(String name, String new_name) {
         if (new_name.equals(name)) {
             System.out.println("Choose a new name");
             return;
@@ -27,7 +51,7 @@ public class Contact {
         contacts.remove(name);
     }
 
-    public void updateNumber(String name, String new_number) {
+    public static void updateNumber(String name, String new_number) {
         if (new_number.equals(contacts.get(name))) {
             System.out.println("Choose a new number");
             return;
